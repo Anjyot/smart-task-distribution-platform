@@ -1,63 +1,76 @@
 # 🚀 Agent Task Distribution System
 
-A professional MERN Stack (MongoDB, Express.js, React.js, Node.js) application that allows an admin to manage agents, upload CSV/XLS/XLSX files, and automatically distribute tasks using a smart round-robin algorithm.
+A **production-ready MERN Stack (MongoDB, Express.js, React.js, Node.js)** application designed to manage agents, process uploaded CSV/XLS/XLSX files, and automatically distribute tasks using a scalable round-robin algorithm.
+
+This system simulates a real-world **CRM / Task Management SaaS platform** with authentication, role-based control, file processing, and analytics dashboard.
 
 ---
 
-## 🎯 Project Overview
+## 🎯 Project Objective
 
-This system enables an admin to:
-- Secure login using JWT authentication
-- Create and manage agents
-- Upload CSV / XLS / XLSX files
-- Validate uploaded data
-- Automatically distribute records among agents
-- Store tasks in MongoDB
-- View dashboard analytics
+The main goal of this project is to build a system where:
 
----
-
-## ✨ Features
-
-### 🔐 Authentication
-- JWT-based login system
-- Password hashing using bcrypt
-- Protected routes
-- Auto admin creation on first run
+- Admin can securely log in
+- Admin can create and manage agents
+- Admin can upload lead/task files (CSV, XLS, XLSX)
+- System validates and processes uploaded data
+- Tasks are automatically distributed among agents
+- Admin can monitor everything through a dashboard
 
 ---
 
-### 👨‍💼 Agent Management
-- Add agents
-- View agents list
-- Search agents
-- Delete agents
-- View assigned task count
+## ✨ Key Features
+
+### 🔐 Authentication System
+- Secure JWT-based authentication
+- Password encryption using bcryptjs
+- Protected routes for all dashboard features
+- Auto admin creation on first server start
+- Token expiry handling (1 day)
 
 ---
 
-### 📂 File Upload System
-- CSV / XLS / XLSX support
-- File validation (format, size, structure)
-- Data parsing using csv-parser & xlsx
-- Error handling
+### 👨‍💼 Agent Management System
+- Create new agents with validation
+- View all agents in tabular format
+- Search agents (name, email, mobile)
+- Delete agents with safety checks
+- Display assigned task count per agent
+- Pagination support for large datasets
 
 ---
 
-### 🔄 Task Distribution System
-- Round Robin algorithm
-- Equal task allocation
-- Handles extra records fairly
-- Bulk insert optimization using insertMany
+### 📂 File Upload & Processing
+- Supports:
+  - CSV
+  - XLS
+  - XLSX
+- File validation (type, size, structure)
+- Automatic parsing using:
+  - `csv-parser`
+  - `xlsx`
+- Invalid record detection and reporting
+- Bulk processing for performance optimization
 
 ---
 
-### 📊 Dashboard
+### 🔄 Task Distribution Engine
+- Round-robin distribution algorithm
+- Equal workload distribution across agents
+- Handles remaining records intelligently
+- Bulk insertion using `insertMany`
+- Optimized for large datasets (1000+ records)
+
+---
+
+### 📊 Dashboard & Analytics
 - Total agents count
 - Total tasks count
-- Upload history
-- Distribution analytics
+- Upload history tracking
+- Task distribution analytics
+- Agent performance overview
 - Charts using Recharts
+- Real-time system insights
 
 ---
 
@@ -66,8 +79,8 @@ This system enables an admin to:
 ### Frontend
 - React.js (Vite)
 - Tailwind CSS
-- Axios
 - React Router DOM
+- Axios
 - React Hook Form
 - React Hot Toast
 - Recharts
@@ -75,66 +88,108 @@ This system enables an admin to:
 ### Backend
 - Node.js
 - Express.js
-- MongoDB + Mongoose
+- MongoDB (Mongoose)
 - JWT Authentication
 - bcryptjs
-- Multer
+- Multer (file upload)
 - csv-parser
 - xlsx
 
+### Database
+- MongoDB Atlas / Local MongoDB
+
 ---
 
-## 📁 Project Structure
+## 📁 Project Architecture
 
 ```
 backend/
+│
+├── src/
+│   ├── config/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── services/
+│   ├── utils/
+│   └── validations/
+│
+├── uploads/
+├── server.js
+└── package.json
+
 frontend/
-README.md
+│
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── context/
+│   ├── services/
+│   ├── routes/
+│   ├── utils/
+│   └── assets/
+│
+└── package.json
 ```
 
 ---
 
-## ⚙️ Installation & Setup
+## ⚙️ Installation & Setup Guide
 
 ### 1️⃣ Clone Repository
 ```bash
-git clone https://github.com/your-username/agent-task-distribution.git
-cd agent-task-distribution
+git clone https://github.com/your-username/agent-task-distribution-system.git
+cd agent-task-distribution-system
 ```
 
 ---
 
 ### 2️⃣ Backend Setup
+
 ```bash
 cd backend
 npm install
 ```
 
 Create `.env` file:
+
 ```env
 PORT=5000
 MONGO_URI=mongodb://localhost:27017/agent-task-distribution
-JWT_SECRET=your_secret_key
+JWT_SECRET=your_super_secret_key
 NODE_ENV=development
 ```
 
 Run backend:
+
 ```bash
 npm run dev
+```
+
+Backend runs at:
+```
+http://localhost:5000
 ```
 
 ---
 
 ### 3️⃣ Frontend Setup
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
+Frontend runs at:
+```
+http://localhost:5173
+```
+
 ---
 
-## 🔐 Default Admin Login
+## 🔐 Default Admin Credentials
 
 ```
 Email: admin@example.com
@@ -145,108 +200,149 @@ Password: Admin@123
 
 ## 📡 API Endpoints
 
-### Auth
-- POST `/api/auth/login`
+### Authentication
+```
+POST /api/auth/login
+```
 
 ### Agents
-- POST `/api/agents`
-- GET `/api/agents`
-- GET `/api/agents/:id`
-- DELETE `/api/agents/:id`
+```
+POST   /api/agents
+GET    /api/agents
+GET    /api/agents/:id
+DELETE /api/agents/:id
+```
 
 ### Upload
-- POST `/api/upload`
+```
+POST /api/upload
+```
 
 ### Tasks
-- GET `/api/tasks`
-- GET `/api/tasks/agent/:id`
-- GET `/api/tasks/search`
+```
+GET /api/tasks
+GET /api/tasks/agent/:id
+GET /api/tasks/search
+```
 
 ---
 
-## 🔄 Distribution Logic
+## 🔄 Task Distribution Logic
 
-Round Robin Algorithm:
+The system uses a **Round Robin Algorithm**:
 
 ```
-25 records → 5 agents → 5 each
-27 records → 5 agents → 6,6,5,5,5
-100 records → 5 agents → 20 each
+Example:
+
+25 records → 5 agents → 5 each  
+27 records → 5 agents → 6,6,5,5,5  
+100 records → 5 agents → 20 each  
 ```
+
+This ensures:
+- Equal workload distribution
+- Fair assignment
+- Scalable processing
 
 ---
 
 ## 🧪 Testing Checklist
 
-- Login system working
-- Agent creation working
-- File upload working
-- Task distribution working
-- Search functionality working
-- Dashboard stats working
+- [x] Admin login works
+- [x] Agent creation works
+- [x] File upload works
+- [x] Task distribution works
+- [x] Search functionality works
+- [x] Dashboard analytics works
+- [x] Responsive UI works
 
 ---
 
 ## 📸 Screenshots
 
-Create folder:
+> Add all screenshots inside `/screenshots` folder
 
 ```
 screenshots/
+├── login.png
+├── dashboard.png
+├── agents.png
+├── upload.png
+├── tasks.png
 ```
-
-Add images:
-
-- login.png
-- dashboard.png
-- agents.png
-- upload.png
-- tasks.png
 
 ---
 
 ### 🔐 Login Page
-![Login](screenshots/login.png)
+<img width="1918" height="911" alt="image" src="https://github.com/user-attachments/assets/7557e853-e555-47d8-b93b-0325d072de6a" />
 
 ### 📊 Dashboard
-![Dashboard](screenshots/dashboard.png)
+<img width="1918" height="911" alt="image" src="https://github.com/user-attachments/assets/58c9905f-7d2c-4d0c-ac21-d41f5cce34b7" />
+<img width="1918" height="816" alt="image" src="https://github.com/user-attachments/assets/2c03a96f-1a8c-4ad7-a254-0babb9f78c7e" />
 
-### 👨‍💼 Agents Page
-![Agents](screenshots/agents.png)
+### 👨‍💼 Agent Management
+<img width="1918" height="906" alt="image" src="https://github.com/user-attachments/assets/81dabbb4-a507-4e64-8a84-11359dbac6f2" />
 
-### 📂 Upload Page
-![Upload](screenshots/upload.png)
+### 📂 File Upload System
+<img width="1918" height="907" alt="image" src="https://github.com/user-attachments/assets/48be001c-0582-4abc-ac92-d52498264153" />
+<img width="1918" height="911" alt="image" src="https://github.com/user-attachments/assets/5cfc163a-5e77-436e-abe2-3270d6dde314" />
 
-### 📋 Tasks Page
-![Tasks](screenshots/tasks.png)
+### 📋 Task Distribution
+<img width="1918" height="908" alt="image" src="https://github.com/user-attachments/assets/47df98a8-31c2-40b4-aa96-ab563718c8f1" />
 
 ---
 
-## 🚀 Features Summary
+## 🚀 Performance Highlights
 
-- JWT Authentication
-- Agent Management
-- File Upload System
-- Automatic Task Distribution
-- Dashboard Analytics
-- Responsive UI
-- MongoDB Integration
+- Optimized MongoDB queries
+- Bulk insert operations
+- Pagination for large datasets
+- Debounced search
+- Efficient file parsing
+- Lightweight React components
+
+---
+
+## 🔐 Security Features
+
+- JWT authentication
+- Password hashing (bcrypt)
+- Input validation
+- Protected API routes
+- Secure environment variables
+- File type validation
+
+---
+
+## 📱 Responsive Design
+
+Fully responsive across:
+
+- Desktop 💻
+- Tablet 📱
+- Mobile 📱
 
 ---
 
 ## 👨‍💻 Author
 
-Senior MERN Stack Developer
+**Anjyot Dhamapurkar**
 
 ---
 
 ## 📄 License
 
-MIT License
+This project is licensed under MIT License.
 
 ---
 
-## ⭐ Note
+## ⭐ Final Note
 
-If you like this project, give it a star ⭐
-```
+If you like this project, consider giving it a ⭐ on GitHub.
+
+This project demonstrates:
+✔ Real-world architecture  
+✔ Scalable backend design  
+✔ Production-level frontend  
+✔ File processing system  
+✔ Task automation logic  
