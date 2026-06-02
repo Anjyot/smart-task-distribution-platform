@@ -260,19 +260,6 @@ This ensures:
 
 ## 📸 Screenshots
 
-> Add all screenshots inside `/screenshots` folder
-
-```
-screenshots/
-├── login.png
-├── dashboard.png
-├── agents.png
-├── upload.png
-├── tasks.png
-```
-
----
-
 ### 🔐 Login Page
 <img width="1918" height="911" alt="image" src="https://github.com/user-attachments/assets/7557e853-e555-47d8-b93b-0325d072de6a" />
 
